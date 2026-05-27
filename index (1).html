@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Glass Calculator</title>
+  <!-- Google Font: sleek monospace display font -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Light / Dark toggle -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+    <span class="icon-sun">☀️</span>
+    <span class="icon-moon">🌙</span>
+  </button>
+
+  <div class="stage">
+    <div class="calculator" role="main" aria-label="Calculator">
+
+      <!-- Display -->
+      <div class="display" aria-live="polite">
+        <div class="expression" id="expression"></div>
+        <div class="result"    id="result">0</div>
+      </div>
+
+      <!-- Button Grid -->
+      <div class="grid">
+
+        <!-- Row 1 -->
+        <button class="btn btn-action" data-action="clear"   aria-label="Clear">C</button>
+        <button class="btn btn-action" data-action="sign"    aria-label="Toggle sign">+/−</button>
+        <button class="btn btn-action" data-action="percent" aria-label="Percent">%</button>
+        <button class="btn btn-op"    data-op="÷"           aria-label="Divide">÷</button>
+
+        <!-- Row 2 -->
+        <button class="btn btn-num" data-num="7">7</button>
+        <button class="btn btn-num" data-num="8">8</button>
+        <button class="btn btn-num" data-num="9">9</button>
+        <button class="btn btn-op"  data-op="×" aria-label="Multiply">×</button>
+
+        <!-- Row 3 -->
+        <button class="btn btn-num" data-num="4">4</button>
+        <button class="btn btn-num" data-num="5">5</button>
+        <button class="btn btn-num" data-num="6">6</button>
+        <button class="btn btn-op"  data-op="−" aria-label="Subtract">−</button>
+
+        <!-- Row 4 -->
+        <button class="btn btn-num" data-num="1">1</button>
+        <button class="btn btn-num" data-num="2">2</button>
+        <button class="btn btn-num" data-num="3">3</button>
+        <button class="btn btn-op"  data-op="+" aria-label="Add">+</button>
+
+        <!-- Row 5 -->
+        <button class="btn btn-num btn-zero" data-num="0">0</button>
+        <button class="btn btn-action" data-action="dot"       aria-label="Decimal">.</button>
+        <button class="btn btn-action" data-action="backspace" aria-label="Backspace">⌫</button>
+        <button class="btn btn-equal"  data-action="equals"    aria-label="Equals">=</button>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

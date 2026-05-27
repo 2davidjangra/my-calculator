@@ -1,0 +1,331 @@
+/* =========================================================
+   Glass Calculator — style.css
+   Glassmorphism dark/light theme with smooth animations
+   ========================================================= */
+
+/* ---------- CSS Variables (Design Tokens) ---------- */
+:root {
+  /* Dark theme (default) */
+  --bg-from: #0d0d1a;
+  --bg-to:   #1a1030;
+  --glass-bg:      rgba(255, 255, 255, 0.06);
+  --glass-border:  rgba(255, 255, 255, 0.12);
+  --glass-shadow:  0 24px 64px rgba(0, 0, 0, 0.55);
+  --blur: 24px;
+
+  --btn-num-bg:    rgba(255, 255, 255, 0.08);
+  --btn-num-hover: rgba(255, 255, 255, 0.18);
+  --btn-num-active:rgba(255, 255, 255, 0.28);
+
+  --btn-action-bg:    rgba(180, 180, 210, 0.15);
+  --btn-action-hover: rgba(180, 180, 210, 0.28);
+
+  --btn-op-bg:    rgba(100, 160, 255, 0.22);
+  --btn-op-hover: rgba(100, 160, 255, 0.38);
+  --btn-op-text:  #82b4ff;
+
+  --btn-eq-from: #6c63ff;
+  --btn-eq-to:   #a78bfa;
+  --btn-eq-shadow: rgba(108, 99, 255, 0.45);
+
+  --text-primary:   #f0f0ff;
+  --text-secondary: rgba(240, 240, 255, 0.5);
+  --text-action:    #c8c8e8;
+
+  --display-bg:    rgba(0, 0, 0, 0.3);
+  --display-border:rgba(255, 255, 255, 0.08);
+
+  --orb1: rgba(108, 99, 255, 0.28);
+  --orb2: rgba(167, 139, 250, 0.18);
+
+  --transition: 0.18s ease;
+}
+
+/* Light theme overrides */
+[data-theme="light"] {
+  --bg-from: #e8eaf6;
+  --bg-to:   #d0d5f5;
+  --glass-bg:      rgba(255, 255, 255, 0.55);
+  --glass-border:  rgba(255, 255, 255, 0.85);
+  --glass-shadow:  0 24px 64px rgba(80, 80, 160, 0.18);
+
+  --btn-num-bg:    rgba(255, 255, 255, 0.6);
+  --btn-num-hover: rgba(255, 255, 255, 0.85);
+  --btn-num-active:rgba(220, 220, 255, 0.9);
+
+  --btn-action-bg:    rgba(180, 180, 220, 0.35);
+  --btn-action-hover: rgba(160, 160, 210, 0.55);
+
+  --btn-op-bg:    rgba(100, 130, 255, 0.18);
+  --btn-op-hover: rgba(100, 130, 255, 0.32);
+  --btn-op-text:  #4f6ef7;
+
+  --btn-eq-shadow: rgba(108, 99, 255, 0.3);
+
+  --text-primary:   #1a1a3a;
+  --text-secondary: rgba(30, 30, 80, 0.5);
+  --text-action:    #3a3a6a;
+
+  --display-bg:    rgba(255, 255, 255, 0.4);
+  --display-border:rgba(120, 120, 200, 0.2);
+
+  --orb1: rgba(108, 99, 255, 0.18);
+  --orb2: rgba(167, 139, 250, 0.12);
+}
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--bg-from) 0%, var(--bg-to) 100%);
+  transition: background 0.4s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Decorative ambient orbs */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  transition: background 0.4s ease;
+}
+body::before {
+  width: 420px; height: 420px;
+  top: -100px; left: -100px;
+  background: var(--orb1);
+}
+body::after {
+  width: 320px; height: 320px;
+  bottom: -80px; right: -80px;
+  background: var(--orb2);
+}
+
+/* ---------- Theme Toggle ---------- */
+.theme-toggle {
+  position: fixed;
+  top: 20px; right: 20px;
+  z-index: 100;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-radius: 50px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: transform var(--transition), box-shadow var(--transition);
+  display: flex; gap: 6px; align-items: center;
+}
+.theme-toggle:hover { transform: scale(1.08); }
+[data-theme="dark"]  .icon-sun  { display: none; }
+[data-theme="dark"]  .icon-moon { display: inline; }
+[data-theme="light"] .icon-moon { display: none; }
+[data-theme="light"] .icon-sun  { display: inline; }
+
+/* ---------- Stage ---------- */
+.stage {
+  position: relative;
+  z-index: 1;
+  padding: 16px;
+}
+
+/* ---------- Calculator Card ---------- */
+.calculator {
+  width: min(360px, 96vw);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  box-shadow: var(--glass-shadow);
+  padding: 24px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+/* ---------- Display ---------- */
+.display {
+  background: var(--display-bg);
+  border: 1px solid var(--display-border);
+  border-radius: 18px;
+  padding: 16px 20px 14px;
+  text-align: right;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.expression {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--text-secondary);
+  min-height: 18px;
+  word-break: break-all;
+  transition: color 0.3s;
+}
+
+.result {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(32px, 9vw, 44px);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+  word-break: break-all;
+  transition: color 0.3s, font-size 0.15s;
+}
+
+/* Shrink font for long numbers */
+.result.small { font-size: clamp(20px, 5vw, 28px); }
+
+/* ---------- Button Grid ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+/* ---------- Base Button ---------- */
+.btn {
+  border: none;
+  outline: none;
+  border-radius: 14px;
+  font-family: 'Space Mono', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+  transition:
+    background var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* Ripple layer */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.15);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.2s, transform 0.25s;
+}
+.btn:active::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Hover lift */
+.btn:hover  { transform: translateY(-2px); }
+.btn:active { transform: translateY(0) scale(0.95); }
+
+/* ---------- Number Buttons ---------- */
+.btn-num {
+  background: var(--btn-num-bg);
+  color: var(--text-primary);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.btn-num:hover {
+  background: var(--btn-num-hover);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+/* ---------- Action Buttons (C, +/-, %, ., ⌫) ---------- */
+.btn-action {
+  background: var(--btn-action-bg);
+  color: var(--text-action);
+  font-size: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.btn-action:hover { background: var(--btn-action-hover); }
+
+/* ---------- Operator Buttons ---------- */
+.btn-op {
+  background: var(--btn-op-bg);
+  color: var(--btn-op-text);
+  border: 1px solid rgba(100,160,255,0.15);
+  font-size: 22px;
+}
+.btn-op:hover { background: var(--btn-op-hover); }
+.btn-op.active {
+  background: rgba(100, 160, 255, 0.5);
+  box-shadow: 0 0 18px rgba(100,160,255,0.4);
+}
+
+/* ---------- Equals Button ---------- */
+.btn-equal {
+  background: linear-gradient(135deg, var(--btn-eq-from), var(--btn-eq-to));
+  color: #fff;
+  font-size: 24px;
+  box-shadow: 0 6px 24px var(--btn-eq-shadow);
+  border: none;
+}
+.btn-equal:hover {
+  box-shadow: 0 8px 32px var(--btn-eq-shadow);
+  filter: brightness(1.1);
+}
+
+/* ---------- Zero button (wide) ---------- */
+/* The "0" button takes 2 columns */
+.btn-zero {
+  /* Override to span 1 col; layout handled below */
+}
+
+/* Reorder last row: 0 takes 2 cols */
+.grid .btn-zero   { grid-column: span 1; }   /* keep 1 for standard grid */
+
+/* ---------- Keyboard highlight ---------- */
+.btn.key-press {
+  animation: keyFlash 0.18s ease both;
+}
+@keyframes keyFlash {
+  0%   { filter: brightness(1); }
+  50%  { filter: brightness(1.6); }
+  100% { filter: brightness(1); }
+}
+
+/* ---------- Error shake ---------- */
+.calculator.shake {
+  animation: shake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-8px); }
+  40%       { transform: translateX(8px); }
+  60%       { transform: translateX(-5px); }
+  80%       { transform: translateX(5px); }
+}
+
+/* ---------- Responsive tweaks ---------- */
+@media (max-width: 400px) {
+  .calculator { padding: 18px 14px 14px; gap: 14px; }
+  .grid { gap: 9px; }
+  .btn  { font-size: 16px; border-radius: 12px; }
+}
